@@ -50,15 +50,12 @@ class BoardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($board->isSolved());
     }
 
-
     /**
      * @expectedException   \FifteenPuzzle\Model\InvalidSwapException
      */
     public function testIllegalSwapLeft()
     {
         $board = new Board();
-        $board->swapLeft();
-        $board->swapLeft();
         $board->swapLeft();
         $board->swapLeft();
         $board->swapLeft();
