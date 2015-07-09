@@ -14,7 +14,7 @@ class Board
     private $size;
     private $freeSpace;
 
-    public function __construct($size = 4)
+    public function __construct($size = 3)
     {
         $this->size = $size;
         $this->matrix = new \SplFixedArray($size);
@@ -47,21 +47,37 @@ class Board
         return $this->size;
     }
 
+    private function doSwap($row1, $col1, $row2, $col2)
+    {
+        $tmp = $this->matrix[$row1][$col1];
+        $this->matrix[$row1][$col1] = $this->matrix[$row2][$col2];
+        $this->matrix[$row2][$col2] = $tmp;
+    }
+
     public function swapLeft()
     {
         $freeRow = $this->freeSpace[0];
         $freeCol = $this->freeSpace[1];
 
         if ($freeCol - 1 >= 0){
-            $tmp = $this->matrix[$freeRow][$freeCol - 1];
-            $this->matrix[$freeRow][$freeCol - 1] = null;
-            $this->matrix[$freeRow][$freeCol] = $tmp;
-
+            $this->doSwap($freeRow, $freeCol - 1, $freeRow, $freeCol);
             $this->freeSpace = [$freeRow, $freeCol - 1];
         } else {
-            throw new \Exception("Illegal Swap!");
+            throw new InvalidSwapException();
         }
+    }
 
+    public function swapRight()
+    {
+        $freeRow = $this->freeSpace[0];
+        $freeCol = $this->freeSpace[1];
+
+        if ($freeCol < $this->size) {
+            $this->doSwap($freeRow, $freeCol + 1, $freeRow, $freeCol);
+            $this->freeSpace = [$freeRow, $freeCol + 1];
+        } else {
+            throw new InvalidSwapException();
+        }
     }
 
     public function isSolved()

@@ -13,13 +13,13 @@ class BoardTest extends \PHPUnit_Framework_TestCase
     public function testDefaultBoardSize()
     {
         $board = new Board();
-        $this->assertEquals(4, $board->getSize());
+        $this->assertEquals(3, $board->getSize());
     }
 
     public function testCustomBoardSize()
     {
-        $board = new Board(3);
-        $this->assertEquals(3, $board->getSize());
+        $board = new Board(4);
+        $this->assertEquals(4, $board->getSize());
     }
 
     public function testBoardIsSolved()
@@ -34,5 +34,35 @@ class BoardTest extends \PHPUnit_Framework_TestCase
         $board->swapLeft();
         $this->assertFalse($board->isSolved());
     }
+
+    public function testSwapRightAndLeft()
+    {
+        $board = new Board();
+        $board->swapLeft();
+        $this->assertFalse($board->isSolved());
+        $board->swapLeft();
+        $this->assertFalse($board->isSolved());
+        $board->swapRight();
+        $this->assertFalse($board->isSolved());
+        $board->swapRight();
+
+        echo $board;
+        $this->assertTrue($board->isSolved());
+    }
+
+
+    /**
+     * @expectedException   \FifteenPuzzle\Model\InvalidSwapException
+     */
+    public function testIllegalSwapLeft()
+    {
+        $board = new Board();
+        $board->swapLeft();
+        $board->swapLeft();
+        $board->swapLeft();
+        $board->swapLeft();
+        $board->swapLeft();
+    }
+
 }
 
