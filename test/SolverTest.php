@@ -8,7 +8,8 @@
 
 namespace FifteenPuzzle;
 
-class SolverTest extends \PHPUnit_Framework_TestCase {
+class SolverTest extends \PHPUnit_Framework_TestCase
+{
     public function testSayHello()
     {
         $solver = new Solver();
