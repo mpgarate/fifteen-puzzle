@@ -1,0 +1,19 @@
+{
+  "name": "mpgarate/fifteenpuzzle",
+  "description": "solve fifteen puzzles",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "mpgarate"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "4.7.6"
+  },
+  "autoload":{
+    "psr-4":{
+      "FifteenPuzzle\\": ["src/"]
+    }
+  }
+}
