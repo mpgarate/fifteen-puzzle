@@ -78,6 +78,6 @@ class BitBoard {
 
     public function isSolved()
     {
-        return $this>bits === self::SOLUTION && 0 == $this->fifteen;
+        return $this>bits == self::SOLUTION && 0 == $this->fifteen;
     }
 }

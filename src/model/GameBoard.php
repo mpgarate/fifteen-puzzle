@@ -13,7 +13,7 @@ class GameBoard
     const SIZE = 4;
 
     private $bitboard;
-    private $freeSpace = 16;
+    private $freeSpace = 15;
 
     public function __construct()
     {
@@ -32,14 +32,29 @@ class GameBoard
         $this->bitboard->set($row2, $col2, $tmp);
     }
 
+    private function setFreeSpace($row, $col)
+    {
+        $this->freeSpace = ($row * 4) + $col;
+    }
+
+    private function getFreeRow()
+    {
+        return ($this->freeSpace - $this->getFreeCol()) / 4;
+    }
+
+    private function getFreeCol()
+    {
+        return $this->freeSpace % 4;
+    }
+
     public function swapLeft()
     {
-        $freeCol = $this->freeSpace % 4;
-        $freeRow = ($this->freeSpace - $freeCol) / 4;
+        $freeCol = $this->getFreeCol();
+        $freeRow = $this->getFreeRow();
 
         if ($freeCol - 1 >= 0){
             $this->doSwap($freeRow, $freeCol - 1, $freeRow, $freeCol);
-            $this->freeSpace = ($freeRow * 4) + $freeCol - 1;
+            $this->setFreeSpace($freeRow, $freeCol - 1);
         } else {
             throw new InvalidSwapException();
         }
@@ -47,12 +62,12 @@ class GameBoard
 
     public function swapRight()
     {
-        $freeCol = $this->freeSpace % 4;
-        $freeRow = ($this->freeSpace - $freeCol) / 4;
+        $freeCol = $this->getFreeCol();
+        $freeRow = $this->getFreeRow();
 
         if ($freeCol < self::SIZE) {
             $this->doSwap($freeRow, $freeCol + 1, $freeRow, $freeCol);
-            $this->freeSpace = (freeRow * 4) + $freeCol + 1;
+            $this->setFreeSpace($freeRow, $freeCol + 1);
         } else {
             throw new InvalidSwapException();
         }
@@ -67,13 +82,13 @@ class GameBoard
     {
         $str = "";
 
-        for ($i = 0; $i < $this->size; $i++)
+        for ($i = 0; $i < self::SIZE; $i++)
         {
-            for ($j = 0; $j < $this->size; $j++)
+            for ($j = 0; $j < self::SIZE; $j++)
             {
                 $bucket = $this->bitboard->get($i,$j);
 
-                if (null == $bucket){
+                if (0 == $bucket){
                     $str .= "   -";
                 } else {
                     $str .= sprintf("%' 4d", $bucket);
