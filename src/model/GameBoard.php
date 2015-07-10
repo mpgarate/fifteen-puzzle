@@ -10,36 +10,36 @@ namespace FifteenPuzzle\Model;
 
 class GameBoard
 {
-    private $bitboard = new BitBoard();
-    private $size;
+    const SIZE = 4;
+
+    private $bitboard;
     private $freeSpace = 16;
 
-    public function __construct($size = 3)
+    public function __construct()
     {
-        $this->size = $size;
-        $this->matrix = 0; //some constant that represents a default board
+        $this->bitboard = new BitBoard();
     }
 
     public function getSize()
     {
-        return $this->size;
+        return self::SIZE;
     }
 
     private function doSwap($row1, $col1, $row2, $col2)
     {
-        $tmp = $this->matrix[$row1][$col1];
-        $this->matrix[$row1][$col1] = $this->matrix[$row2][$col2];
-        $this->matrix[$row2][$col2] = $tmp;
+        $tmp = $this->bitboard->get($row1, $col1);
+        $this->bitboard->set($row1, $col1, $this->bitboard->get($row2, $col2));
+        $this->bitboard->set($row2, $col2, $tmp);
     }
 
     public function swapLeft()
     {
-        $freeRow = $this->freeSpace[0];
-        $freeCol = $this->freeSpace[1];
+        $freeCol = $this->freeSpace % 4;
+        $freeRow = ($this->freeSpace - $freeCol) / 4;
 
         if ($freeCol - 1 >= 0){
             $this->doSwap($freeRow, $freeCol - 1, $freeRow, $freeCol);
-            $this->freeSpace = [$freeRow, $freeCol - 1];
+            $this->freeSpace = ($freeRow * 4) + $freeCol - 1;
         } else {
             throw new InvalidSwapException();
         }
@@ -47,12 +47,12 @@ class GameBoard
 
     public function swapRight()
     {
-        $freeRow = $this->freeSpace[0];
-        $freeCol = $this->freeSpace[1];
+        $freeCol = $this->freeSpace % 4;
+        $freeRow = ($this->freeSpace - $freeCol) / 4;
 
-        if ($freeCol < $this->size) {
+        if ($freeCol < self::SIZE) {
             $this->doSwap($freeRow, $freeCol + 1, $freeRow, $freeCol);
-            $this->freeSpace = [$freeRow, $freeCol + 1];
+            $this->freeSpace = (freeRow * 4) + $freeCol + 1;
         } else {
             throw new InvalidSwapException();
         }
@@ -60,29 +60,7 @@ class GameBoard
 
     public function isSolved()
     {
-        $digit = 1;
-        $maxDigit = ($this->size * $this->size) - 1;
-
-        for ($i = 0; $i < $this->size; $i++)
-        {
-            for ($j = 0; $j < $this->size; $j++)
-            {
-                $bucket = $this->matrix[$i][$j];
-                if ($digit <= $maxDigit) {
-                    if ($digit != $bucket){
-                        return false;
-                    }
-
-                    $digit++;
-                } else {
-                    if (null != $bucket){
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        return $this->bitboard->isSolved();
     }
 
     public function __toString()
@@ -93,7 +71,7 @@ class GameBoard
         {
             for ($j = 0; $j < $this->size; $j++)
             {
-                $bucket = $this->matrix[$i][$j];
+                $bucket = $this->bitboard->get($i,$j);
 
                 if (null == $bucket){
                     $str .= "   -";

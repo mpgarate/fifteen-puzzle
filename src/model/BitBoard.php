@@ -16,13 +16,13 @@ class BitBoard {
        * From the left, each index of the number represents:
        * 0 - ignored since values over 7 cause integer overflow.
        *
-       * 1 - location of number 1
-       * 2 - location of number 2
+       * 1 - contents of location 0.
+       * 2 - contents of location 1.
        * ...
-       * 14 - location of number 14
-       * 15 - location of number 15
+       * 14 - contents of location 13.
+       * 15 - contents of location 14.
        *
-       * The empty space is stored separately.
+       * Location 15 is stored separately in $fifteen.
        *
        * Solution state:
        * 0x00123456789ABCDE;
@@ -39,24 +39,45 @@ class BitBoard {
     4
      */
 
-    private $bits = 0x00123456789ABCDE;
+    const SOLUTION = 0x0123456789ABCDEF;
+    private $bits = self::SOLUTION;
+    private $fifteen = 0;
 
-    public function get($index)
+    private function rowColToOffset($row, $col)
     {
-        $offset = 4 * (15 - $index);
+        $index = ($row * 4) + $col;
+        return 4 * (14 - $index);
+    }
+
+    public function get($row, $col)
+    {
+        $offset = $this->rowColToOffset($row, $col);
+
+        if ($offset < 0) {
+            return $this->fifteen;
+        }
 
         return (($this->bits & ( 0xF << $offset)) >> $offset);
     }
 
-    public function set($index, $value)
+    public function set($row, $col, $value)
     {
-        if ($value > 15 || $value < 0)
-        {
-            throw new \InvalidArgumentException("value out of range");
+        $offset= $this->rowColToOffset($row, $col);
+
+        if ($offset < 0) {
+            $this->fifteen = $value;
+        } else {
+            // set the bucket contents to zero
+            $this->bits = $this->bits & ~(0xF << ($offset));
+
+            // increase the bucket contents to $value
+            $this->bits = $this->bits | ($value << ($offset));
         }
 
-        $offset = 4 * (15 - $index);
-        $this->bits = $this->bits & ~(0xF << ($offset));
-        $this->bits = $this->bits | ($value << ($offset));
+    }
+
+    public function isSolved()
+    {
+        return $this>bits === self::SOLUTION && 0 == $this->fifteen;
     }
 }
