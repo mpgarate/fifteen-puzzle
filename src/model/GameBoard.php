@@ -8,38 +8,16 @@
 
 namespace FifteenPuzzle\Model;
 
-class Board
+class GameBoard
 {
-    private $matrix;
+    private $bitboard = new BitBoard();
     private $size;
-    private $freeSpace;
+    private $freeSpace = 16;
 
     public function __construct($size = 3)
     {
         $this->size = $size;
-        $this->matrix = new \SplFixedArray($size);
-
-        for ($i = 0; $i < $size; $i++)
-        {
-            $this->matrix[$i] = new \SplFixedArray($size);
-        }
-
-        $digit = 1;
-        $maxDigit = ($size * $size) - 1;
-
-        for ($i = 0; $i < $size; $i++)
-        {
-            for ($j = 0; $j < $size; $j++)
-            {
-                if ($digit <= $maxDigit) {
-                    $this->matrix[$i][$j] = $digit;
-                    $digit++;
-                } else {
-                    $this->matrix[$i][$j] = null;
-                    $this->freeSpace = [$i, $j];
-                }
-            }
-        }
+        $this->matrix = 0; //some constant that represents a default board
     }
 
     public function getSize()

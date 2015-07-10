@@ -8,36 +8,36 @@
 
 namespace FifteenPuzzle\Model;
 
-class BoardTest extends \PHPUnit_Framework_TestCase
+class GameBoardTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultBoardSize()
     {
-        $board = new Board();
+        $board = new GameBoard();
         $this->assertEquals(3, $board->getSize());
     }
 
     public function testCustomBoardSize()
     {
-        $board = new Board(4);
+        $board = new GameBoard(4);
         $this->assertEquals(4, $board->getSize());
     }
 
     public function testBoardIsSolved()
     {
-        $board = new Board();
+        $board = new GameBoard();
         $this->assertTrue($board->isSolved());
     }
 
     public function testBoardIsNotSolved()
     {
-        $board = new Board();
+        $board = new GameBoard();
         $board->swapLeft();
         $this->assertFalse($board->isSolved());
     }
 
     public function testSwapRightAndLeft()
     {
-        $board = new Board();
+        $board = new GameBoard();
         $board->swapLeft();
         $this->assertFalse($board->isSolved());
         $board->swapLeft();
@@ -55,7 +55,7 @@ class BoardTest extends \PHPUnit_Framework_TestCase
      */
     public function testIllegalSwapLeft()
     {
-        $board = new Board();
+        $board = new GameBoard();
         $board->swapLeft();
         $board->swapLeft();
         $board->swapLeft();
