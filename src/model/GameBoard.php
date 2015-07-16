@@ -13,28 +13,46 @@ class GameBoard
     const SIZE = 4;
 
     private $bitboard;
-    private $freeSpace = 15;
+    private $freeSpace;
 
-    public function __construct()
+    public function __construct($bitboard = null, $freeSpace = null)
     {
-        $this->bitboard = new BitBoard();
+
+        if (null == $bitboard || null == $freeSpace) {
+            $this->bitboard = new BitBoard();
+            $this->freeSpace = 15;
+        } else {
+            $this->bitboard = new BitBoard($bitboard);
+
+            if ($freeSpace > 0 && $freeSpace < 16) {
+                $this->freeSpace = $freeSpace;
+            } else {
+                throw new \InvalidArgumentException();
+            }
+        }
     }
 
-    public function getSize()
+    private function doSwap($row1, $col1)
     {
-        return self::SIZE;
-    }
+        $row2 = $this->getFreeRow();
+        $col2 = $this->getFreeCol();
 
-    private function doSwap($row1, $col1, $row2, $col2)
-    {
         $tmp = $this->bitboard->get($row1, $col1);
         $this->bitboard->set($row1, $col1, $this->bitboard->get($row2, $col2));
         $this->bitboard->set($row2, $col2, $tmp);
+
+        $this->setFreeSpace($row1, $col1);
     }
 
     private function setFreeSpace($row, $col)
     {
-        $this->freeSpace = ($row * 4) + $col;
+
+        if ($row > 3 || $col > 3 || $row < 0 || $col < 0) {
+            throw new \InvalidArgumentException();
+        }
+
+        $val = ($row * 4) + $col;
+        $this->freeSpace = $val;
     }
 
     private function getFreeRow()
@@ -52,9 +70,8 @@ class GameBoard
         $freeCol = $this->getFreeCol();
         $freeRow = $this->getFreeRow();
 
-        if ($freeCol - 1 >= 0){
-            $this->doSwap($freeRow, $freeCol - 1, $freeRow, $freeCol);
-            $this->setFreeSpace($freeRow, $freeCol - 1);
+        if ($freeCol != 0){
+            $this->doSwap($freeRow, $freeCol - 1);
         } else {
             throw new InvalidSwapException();
         }
@@ -65,9 +82,32 @@ class GameBoard
         $freeCol = $this->getFreeCol();
         $freeRow = $this->getFreeRow();
 
-        if ($freeCol < self::SIZE) {
-            $this->doSwap($freeRow, $freeCol + 1, $freeRow, $freeCol);
-            $this->setFreeSpace($freeRow, $freeCol + 1);
+        if ($freeCol != 3) {
+            $this->doSwap($freeRow, $freeCol + 1);
+        } else {
+            throw new InvalidSwapException();
+        }
+    }
+
+    public function swapUp()
+    {
+        $freeCol = $this->getFreeCol();
+        $freeRow = $this->getFreeRow();
+
+        if ($freeRow != 0) {
+            $this->doSwap($freeRow - 1, $freeCol);
+        } else {
+            throw new InvalidSwapException();
+        }
+    }
+
+    public function swapDown()
+    {
+        $freeCol = $this->getFreeCol();
+        $freeRow = $this->getFreeRow();
+
+        if ($freeRow != 3) {
+            $this->doSwap($freeRow + 1, $freeCol);
         } else {
             throw new InvalidSwapException();
         }
@@ -101,5 +141,63 @@ class GameBoard
         $str .= "\n";
 
         return $str;
+    }
+
+    public function getValidMoveDirections()
+    {
+        $validDirections = [];
+
+        $freeCol = $this->getFreeCol();
+        $freeRow = $this->getFreeRow();
+
+        if ($freeCol != 0) {
+            $validDirections[] = MoveDirection::LEFT;
+        }
+
+        if ($freeCol != 3) {
+            $validDirections[] = MoveDirection::RIGHT;
+        }
+
+        if ($freeRow != 0) {
+            $validDirections[] = MoveDirection::UP;
+        }
+
+        if ($freeRow != 3) {
+            $validDirections[] = MoveDirection::DOWN;
+        }
+
+        return $validDirections;
+    }
+
+    public function applyMove($direction)
+    {
+        switch ($direction) {
+            case MoveDirection::LEFT:
+                $this->swapLeft();
+                break;
+            case MoveDirection::RIGHT:
+                $this->swapRight();
+                break;
+            case MoveDirection::UP:
+                $this->swapUp();
+                break;
+            case MoveDirection::DOWN:
+                $this->swapDown();
+                break;
+            default:
+                throw new \InvalidArgumentException();
+                break;
+        }
+    }
+
+    public function newFromDirection($direction)
+    {
+        $bitboard = clone $this->bitboard;
+        $freeSpace = $this->freeSpace;
+        $nextBoard = new GameBoard($bitboard, $freeSpace);
+
+        $nextBoard->applyMove($direction);
+
+        return $nextBoard;
     }
 }

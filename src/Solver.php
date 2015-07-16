@@ -10,8 +10,17 @@ namespace FifteenPuzzle;
 
 class Solver
 {
-    public function sayHello()
+    private $board;
+
+    public function __construct($board)
     {
-        return "hello";
+        $this->board = $board;
+    }
+
+    public function getMoves()
+    {
+        if ($this->board->isSolved()){
+            return [];
+        }
     }
 }

@@ -25,7 +25,7 @@ class BitBoard {
        * Location 15 is stored separately in $fifteen.
        *
        * Solution state:
-       * 0x00123456789ABCDE;
+       * 0x0123456789ABCDEF
        *
        * 1  2  3  4
        * 5  6  7  8
@@ -39,9 +39,20 @@ class BitBoard {
     4
      */
 
+
     const SOLUTION = 0x0123456789ABCDEF;
-    private $bits = self::SOLUTION;
+    private $bits;
     private $fifteen = 0;
+
+    public function __construct($bitboard = null)
+    {
+        if (null == $bitboard) {
+            $this->bits = self::SOLUTION;
+        } else {
+            $this->bits = $bitboard->bits;
+            $this->fifteen = $bitboard->fifteen;
+        }
+    }
 
     private function rowColToOffset($row, $col)
     {

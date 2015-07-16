@@ -10,12 +10,6 @@ namespace FifteenPuzzle\Model;
 
 class GameBoardTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCustomBoardSize()
-    {
-        $board = new GameBoard(4);
-        $this->assertEquals(4, $board->getSize());
-    }
-
     public function testBoardIsSolved()
     {
         $board = new GameBoard();
@@ -42,6 +36,19 @@ class GameBoardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($board->isSolved());
     }
 
+    public function testSwapUpAndDown()
+    {
+        $board = new GameBoard();
+        $board->swapUp();
+        $this->assertFalse($board->isSolved());
+        $board->swapUp();
+        $this->assertFalse($board->isSolved());
+        $board->swapDown();
+        $this->assertFalse($board->isSolved());
+        $board->swapDown();
+        $this->assertTrue($board->isSolved());
+    }
+
     /**
      * @expectedException   \FifteenPuzzle\Model\InvalidSwapException
      */
@@ -52,6 +59,29 @@ class GameBoardTest extends \PHPUnit_Framework_TestCase
         $board->swapLeft();
         $board->swapLeft();
         $board->swapLeft();
+    }
+
+    public function testGetAllNextMoveBoards()
+    {
+        $board = new GameBoard();
+
+        $nextBoards = [];
+        $validMoveDirections = $board->getValidMoveDirections();
+
+        foreach ($validMoveDirections as $moveDirection)
+        {
+            $nextBoard = $board->newFromDirection($moveDirection);
+            $nextBoards[] = $nextBoard;
+        }
+
+        $moveLeftBoard = new GameBoard();
+        $moveLeftBoard->applyMove(MoveDirection::LEFT);
+
+        $moveUpBoard = new GameBoard();
+        $moveUpBoard->applyMove(MoveDirection::UP);
+
+        $this->assertTrue(in_array($moveLeftBoard, $nextBoards));
+        $this->assertTrue(in_array($moveUpBoard, $nextBoards));
     }
 
 }

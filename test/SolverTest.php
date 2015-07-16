@@ -8,11 +8,15 @@
 
 namespace FifteenPuzzle;
 
+use FifteenPuzzle\Model\GameBoard;
+
 class SolverTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSayHello()
+    public function testNoMovesForSolvedGame()
     {
-        $solver = new Solver();
-        $this->assertEquals("hello", $solver->sayHello());
+        $board = new GameBoard();
+        $solver = new Solver($board);
+
+        $this->assertEquals(0, sizeOf($solver->getMoves()));
     }
 }
