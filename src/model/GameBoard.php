@@ -12,17 +12,17 @@ class GameBoard
 {
     const SIZE = 4;
 
-    private $bitboard;
+    private $bitBoard;
     private $freeSpace;
 
-    public function __construct($bitboard = null, $freeSpace = null)
+    public function __construct($bitBoard = null, $freeSpace = null)
     {
 
-        if (null == $bitboard || null == $freeSpace) {
-            $this->bitboard = new BitBoard();
+        if (null == $bitBoard || null == $freeSpace) {
+            $this->bitBoard = new BitBoard();
             $this->freeSpace = 15;
         } else {
-            $this->bitboard = new BitBoard($bitboard);
+            $this->bitBoard = new BitBoard($bitBoard);
 
             if ($freeSpace > 0 && $freeSpace < 16) {
                 $this->freeSpace = $freeSpace;
@@ -32,14 +32,23 @@ class GameBoard
         }
     }
 
+    public static function fromBoard(GameBoard $gameBoard)
+    {
+        $freeSpace = $gameBoard->freeSpace;
+        $bitBoard = $gameBoard->bitBoard;
+        $newGameBoard = new GameBoard($bitBoard, $freeSpace);
+
+        return $newGameBoard;
+    }
+
     private function doSwap($row1, $col1)
     {
         $row2 = $this->getFreeRow();
         $col2 = $this->getFreeCol();
 
-        $tmp = $this->bitboard->get($row1, $col1);
-        $this->bitboard->set($row1, $col1, $this->bitboard->get($row2, $col2));
-        $this->bitboard->set($row2, $col2, $tmp);
+        $tmp = $this->bitBoard->get($row1, $col1);
+        $this->bitBoard->set($row1, $col1, $this->bitBoard->get($row2, $col2));
+        $this->bitBoard->set($row2, $col2, $tmp);
 
         $this->setFreeSpace($row1, $col1);
     }
@@ -127,7 +136,7 @@ class GameBoard
 
     public function isSolved()
     {
-        return $this->bitboard->isSolved();
+        return $this->bitBoard->isSolved();
     }
 
     public function __toString()
@@ -138,7 +147,7 @@ class GameBoard
         {
             for ($j = 0; $j < self::SIZE; $j++)
             {
-                $bucket = $this->bitboard->get($i,$j);
+                $bucket = $this->bitBoard->get($i,$j);
 
                 if (0 == $bucket){
                     $str .= "   -";
@@ -204,9 +213,9 @@ class GameBoard
 
     public function newFromDirection($direction)
     {
-        $bitboard = clone $this->bitboard;
+        $bitBoard = clone $this->bitBoard;
         $freeSpace = $this->freeSpace;
-        $nextBoard = new GameBoard($bitboard, $freeSpace);
+        $nextBoard = new GameBoard($bitBoard, $freeSpace);
 
         $nextBoard->applyMove($direction);
 
@@ -226,19 +235,14 @@ class GameBoard
                 continue;
             }
 
-            $val = $this->bitboard->get($actual_row, $actual_col);
+            $val = $this->bitBoard->get($actual_row, $actual_col);
 
             $target_index = $val - 1;
             $target_row = $this->getRow($target_index);
             $target_col = $this->getCol($target_index);
 
-            printf("val: %d\n", $val);
-            printf("actual_row: %d target_row: %d\n", $actual_row, $target_row);
-            printf("actual_col: %d target_col: %d\n", $actual_col, $target_col);
-
             $distance = abs($target_row - $actual_row) + abs($target_col - $actual_col);
 
-            printf("dist: %d\n", $distance);
             $score += $distance;
         }
 

@@ -12,8 +12,9 @@ namespace FifteenPuzzle\datastructure;
 class BoardHeap extends \SplMinHeap {
     public function compare($board1, $board2)
     {
-        $dist1 = $board1->manhattanDistance();
-        $dist2 = $board2->manhattanDistance();
+
+        $dist1 = $board1->getScore();
+        $dist2 = $board2->getScore();
 
         if ($dist1 === $dist2){
             return 0;

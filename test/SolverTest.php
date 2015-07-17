@@ -20,6 +20,15 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, sizeOf($solver->getMoves()));
     }
 
+    /**
+     * @throws Model\InvalidSwapException
+     *
+     * 1  2  3  4
+     * 5  10  6  8
+     * 9  7  -- 12
+     * 13 14 11 15
+     *
+     */
     public function testSolvesEasyBoard()
     {
         $board = new GameBoard();
@@ -32,6 +41,10 @@ class SolverTest extends \PHPUnit_Framework_TestCase
 
         $solver = new Solver($board);
 
-        $this->assertTrue(sizeOf($solver->getMoves())> 0);
+        $solution = $solver->getMoves();
+
+        printf("solution:\n");
+        printf("%s\n", $solution);
+        $this->assertTrue(sizeOf($solution->getSteps()) > 0);
     }
 }

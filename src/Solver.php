@@ -10,6 +10,7 @@ namespace FifteenPuzzle;
 
 use FifteenPuzzle\datastructure\BoardHeap;
 use FifteenPuzzle\Model\GameBoard;
+use FifteenPuzzle\model\SolverState;
 
 class Solver
 {
@@ -28,7 +29,8 @@ class Solver
 
         $boardsMinHeap = new BoardHeap();
 
-        $boardsMinHeap->insert($this->board);
+        $startState = new SolverState($this->board, []);
+        $boardsMinHeap->insert($startState);
 
         $iterations = 0;
 
@@ -40,26 +42,28 @@ class Solver
                 printf("%d\n", $iterations);
 //            }
 
-            $currentBoard = $boardsMinHeap->extract();
+            $currentState = $boardsMinHeap->extract();
 
-            printf("currentBoard:\n");
-            var_dump($currentBoard);
-
-            if ($currentBoard->isSolved()){
+            if ($currentState->isSolved()){
                 echo("board is solved!\n");
-                echo($currentBoard);
+                echo($currentState);
                 // TODO: keep track of steps to get here
-                return [];
+                return $currentState;
             }
 
-            $nextMoveDirections = $currentBoard->getValidMoveDirections();
+            $nextMoveDirections = $currentState->getValidMoveDirections();
 
             // TODO: remove steps that undo last step
 
             foreach($nextMoveDirections as $direction)
             {
-                $nextBoard = $currentBoard->applyMove($direction);
-                $boardsMinHeap->insert($nextBoard);
+                $nextBoard = $currentState->getBoard();
+                $nextBoard->applyMove($direction);
+
+                $nextState = new SolverState($nextBoard, $currentState->getSteps());
+                $nextState->addStep($direction);
+
+                $boardsMinHeap->insert($nextState);
             }
         }
     }
