@@ -47,22 +47,34 @@ class GameBoard
     private function setFreeSpace($row, $col)
     {
 
-        if ($row > 3 || $col > 3 || $row < 0 || $col < 0) {
-            throw new \InvalidArgumentException();
+        if ($row > 3 || $row < 0 ){
+            throw new \InvalidArgumentException("Invalid row: " + $row);
+        } else if ($col > 3 || $col < 0) {
+            throw new \InvalidArgumentException("Invalid col: " + $col);
         }
 
         $val = ($row * 4) + $col;
         $this->freeSpace = $val;
     }
 
+    private function getRow($index)
+    {
+        return ($index - $this->getCol($index)) / 4;
+    }
+
+    private function getCol($index)
+    {
+        return $index % 4;
+    }
+
     private function getFreeRow()
     {
-        return ($this->freeSpace - $this->getFreeCol()) / 4;
+        return ($this->getRow($this->freeSpace));
     }
 
     private function getFreeCol()
     {
-        return $this->freeSpace % 4;
+        return ($this->getCol($this->freeSpace));
     }
 
     public function swapLeft()
@@ -199,5 +211,37 @@ class GameBoard
         $nextBoard->applyMove($direction);
 
         return $nextBoard;
+    }
+
+    public function getScore()
+    {
+        $score = 0;
+
+        for ($i = 0; $i < 16; $i++) {
+
+            $actual_row = $this->getRow($i);
+            $actual_col = $this->getCol($i);
+
+            if ($this->freeSpace === $i){
+                continue;
+            }
+
+            $val = $this->bitboard->get($actual_row, $actual_col);
+
+            $target_index = $val - 1;
+            $target_row = $this->getRow($target_index);
+            $target_col = $this->getCol($target_index);
+
+            printf("val: %d\n", $val);
+            printf("actual_row: %d target_row: %d\n", $actual_row, $target_row);
+            printf("actual_col: %d target_col: %d\n", $actual_col, $target_col);
+
+            $distance = abs($target_row - $actual_row) + abs($target_col - $actual_col);
+
+            printf("dist: %d\n", $distance);
+            $score += $distance;
+        }
+
+        return $score;
     }
 }

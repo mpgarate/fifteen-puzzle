@@ -19,4 +19,19 @@ class SolverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, sizeOf($solver->getMoves()));
     }
+
+    public function testSolvesEasyBoard()
+    {
+        $board = new GameBoard();
+        $board->swapLeft();
+        $board->swapUp();
+        $board->swapUp();
+        $board->swapLeft();
+        $board->swapDown();
+        $board->swapRight();
+
+        $solver = new Solver($board);
+
+        $this->assertTrue(sizeOf($solver->getMoves())> 0);
+    }
 }

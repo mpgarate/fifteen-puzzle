@@ -84,5 +84,18 @@ class GameBoardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(in_array($moveUpBoard, $nextBoards));
     }
 
+    public function testGetScore()
+    {
+        $board = new GameBoard();
+
+        $board->swapUp();
+        $board->swapUp();
+        $board->swapLeft();
+        $board->swapDown();
+
+        printf("%s\n", $board);
+        $this->assertEquals(4, $board->getScore());
+    }
+
 }
 

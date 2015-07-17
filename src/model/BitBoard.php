@@ -60,15 +60,19 @@ class BitBoard {
         return 4 * (14 - $index);
     }
 
-    public function get($row, $col)
+    public function getByIndex($offset)
     {
-        $offset = $this->rowColToOffset($row, $col);
-
         if ($offset < 0) {
             return $this->fifteen;
         }
 
         return (($this->bits & ( 0xF << $offset)) >> $offset);
+    }
+
+    public function get($row, $col)
+    {
+        $offset = $this->rowColToOffset($row, $col);
+        return $this->getByIndex($offset);
     }
 
     public function set($row, $col, $value)
