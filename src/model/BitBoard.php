@@ -59,7 +59,7 @@ class BitBoard {
     public function getByIndex($offset)
     {
         $and = (($this->bits & ( 0xF << $offset)));
-        $shifted = ($and >> $offset) & 0x000000000000000F;
+        $shifted = ($and >> $offset) & 0xF;
         return $shifted;
     }
 
