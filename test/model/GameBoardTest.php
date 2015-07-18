@@ -93,7 +93,6 @@ class GameBoardTest extends \PHPUnit_Framework_TestCase
         $board->swapLeft();
         $board->swapDown();
 
-        printf("%s\n", $board);
         $this->assertEquals(4, $board->getScore());
     }
 

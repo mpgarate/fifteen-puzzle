@@ -22,8 +22,6 @@ class BitBoard {
        * 14 - contents of location 13.
        * 15 - contents of location 14.
        *
-       * Location 15 is stored separately in $fifteen.
-       *
        * Solution state:
        * 0x0123456789ABCDEF
        *
@@ -39,11 +37,9 @@ class BitBoard {
     4
      */
 
-
-    // 0x0123456789ABCDEF
-    const SOLUTION = 81985529216486895;
+    // 0x123456789ABCDEF0
+    const SOLUTION = 1311768467463790320;
     private $bits;
-    private $fifteen = 0;
 
     public function __construct($bitboard = null)
     {
@@ -51,23 +47,20 @@ class BitBoard {
             $this->bits = self::SOLUTION;
         } else {
             $this->bits = $bitboard->bits;
-            $this->fifteen = $bitboard->fifteen;
         }
     }
 
     private function rowColToOffset($row, $col)
     {
         $index = ($row * 4) + $col;
-        return 4 * (14 - $index);
+        return 4 * (15 - $index);
     }
 
     public function getByIndex($offset)
     {
-        if ($offset < 0) {
-            return $this->fifteen;
-        }
-
-        return (($this->bits & ( 0xF << $offset)) >> $offset);
+        $and = (($this->bits & ( 0xF << $offset)));
+        $shifted = ($and >> $offset) & 0x000000000000000F;
+        return $shifted;
     }
 
     public function get($row, $col)
@@ -78,22 +71,17 @@ class BitBoard {
 
     public function set($row, $col, $value)
     {
-        $offset= $this->rowColToOffset($row, $col);
+        $offset = $this->rowColToOffset($row, $col);
 
-        if ($offset < 0) {
-            $this->fifteen = $value;
-        } else {
-            // set the bucket contents to zero
-            $this->bits = $this->bits & ~(0xF << ($offset));
+        // set the bucket contents to zero
+        $this->bits = $this->bits & ~(0xF << ($offset));
 
-            // increase the bucket contents to $value
-            $this->bits = $this->bits | ($value << ($offset));
-        }
-
+        // increase the bucket contents to $value
+        $this->bits = $this->bits | ($value << ($offset));
     }
 
     public function isSolved()
     {
-        return (($this->bits === self::SOLUTION) && (0 === $this->fifteen));
+        return (($this->bits === self::SOLUTION));
     }
 }

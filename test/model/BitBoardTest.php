@@ -55,5 +55,13 @@ class BitBoardTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(15, $bitboard->get(3, 3));
 
     }
+
+    public function testSetIndexZero()
+    {
+        $bitboard = new BitBoard();
+        $bitboard->set(0, 0, 15);
+
+        $this->assertEquals(15, $bitboard->get(0, 0));
+    }
 }
 
