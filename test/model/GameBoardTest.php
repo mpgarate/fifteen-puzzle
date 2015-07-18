@@ -96,5 +96,39 @@ class GameBoardTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $board->getScore());
     }
 
+    public function testEquals()
+    {
+        $board1 = new GameBoard();
+
+        $board1->swapUp();
+        $board1->swapUp();
+        $board1->swapLeft();
+        $board1->swapLeft();
+        $board1->swapUp();
+        $board1->swapLeft();
+        $board1->swapDown();
+        $board1->swapRight();
+        $board1->swapDown();
+        $board1->swapLeft();
+
+
+        $board2 = new GameBoard();
+
+        $board2->swapUp();
+        $board2->swapUp();
+        $board2->swapLeft();
+        $board2->swapLeft();
+        $board2->swapUp();
+        $board2->swapLeft();
+        $board2->swapDown();
+        $board2->swapRight();
+        $board2->swapDown();
+        $board2->swapLeft();
+
+        $this->assertEquals($board1, $board2);
+        $this->assertTrue($board1 == $board2);
+        $this->assertFalse($board1 === $board2);
+    }
+
 }
 

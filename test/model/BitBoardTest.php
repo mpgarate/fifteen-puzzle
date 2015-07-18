@@ -63,5 +63,28 @@ class BitBoardTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals(15, $bitboard->get(0, 0));
     }
+
+    public function testEquals()
+    {
+        $bitboard1 = new BitBoard();
+        $bitboard1->set(1, 1, 1);
+        $bitboard1->set(0, 1, 4);
+        $bitboard1->set(2, 1, 2);
+        $bitboard1->set(0, 0, 0);
+        $bitboard1->set(3, 2, 2);
+        $bitboard1->set(3, 3, 12);
+
+        $bitboard2 = new BitBoard();
+        $bitboard2->set(1, 1, 1);
+        $bitboard2->set(0, 1, 4);
+        $bitboard2->set(2, 1, 2);
+        $bitboard2->set(0, 0, 0);
+        $bitboard2->set(3, 2, 2);
+        $bitboard2->set(3, 3, 12);
+
+        $this->assertEquals($bitboard1, $bitboard2);
+        $this->assertTrue($bitboard1 == $bitboard2);
+        $this->assertFalse($bitboard1 === $bitboard2);
+    }
 }
 

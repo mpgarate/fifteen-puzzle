@@ -77,11 +77,6 @@ class SolverTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws Model\InvalidSwapException
      *
-     * 1  2  3  4
-     * 6  10  7  8
-     * 5  13 11 14
-     * 9  -- 15 12
-     *
      */
     public function testSolvesHarderBoard()
     {

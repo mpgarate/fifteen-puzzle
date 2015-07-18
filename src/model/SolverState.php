@@ -13,21 +13,25 @@ class SolverState {
     private $board;
     private $steps;
 
-    public function __construct($board, $steps)
+    public function __construct($board, $steps = null)
     {
         $this->board = $board;
+
+        if (null === $steps) {
+            $steps = new \SplStack();
+        }
+
         $this->steps = $steps;
     }
 
     public function addStep($step)
     {
-        $this->steps[] = $step;
+        $this->steps->push($step);
     }
 
     public function getSteps()
     {
-        // TODO: this should be a duplicate
-        return $this->steps;
+        return clone $this->steps;
     }
 
     public function getBoard()
@@ -52,7 +56,11 @@ class SolverState {
 
     public function getLastDirection()
     {
-        return $this->steps[sizeof($this->steps) - 1];
+        if ($this->steps->count() === 0) {
+            return null;
+        }
+
+        return $this->steps->top();
     }
 
     public function getValidMoveDirections()
@@ -62,6 +70,7 @@ class SolverState {
 
     public function __toString()
     {
+        printf("size: %d\n", $this->steps->count());
         $str = "";
 
         foreach($this->steps as $step)

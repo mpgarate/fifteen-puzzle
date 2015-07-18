@@ -23,7 +23,7 @@ class Solver
 
         $boardsMinHeap = new BoardHeap();
 
-        $startState = new SolverState($board, []);
+        $startState = new SolverState($board);
         $boardsMinHeap->insert($startState);
 
         $iterations = 0;
@@ -39,7 +39,6 @@ class Solver
             $currentState = $boardsMinHeap->extract();
 
             if ($currentState->isSolved()) {
-                echo($currentState);
                 return $currentState;
             }
 
@@ -52,7 +51,7 @@ class Solver
             for ($i = 0; $i < sizeof($nextMoveDirections); $i++) {
                 $direction = $nextMoveDirections[$i];
 
-                if (null !== $lastDirection && $direction === $lastDirection * -1){
+                if ((null !== $lastDirection) && ($direction === ($lastDirection * -1))){
                     continue;
                 }
 
