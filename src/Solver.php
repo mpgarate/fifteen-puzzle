@@ -15,22 +15,15 @@ use FifteenPuzzle\model\SolverState;
 
 class Solver
 {
-    private $board;
-
-    public function __construct(GameBoard $board)
+    public static function getMovesFrom($board)
     {
-        $this->board = $board;
-    }
-
-    public function getMoves()
-    {
-        if ($this->board->isSolved()){
+        if ($board->isSolved()){
             return [];
         }
 
         $boardsMinHeap = new BoardHeap();
 
-        $startState = new SolverState($this->board, []);
+        $startState = new SolverState($board, []);
         $boardsMinHeap->insert($startState);
 
         $iterations = 0;
@@ -45,16 +38,14 @@ class Solver
 
             $currentState = $boardsMinHeap->extract();
 
-            printf("currentState: \n");
-            printf("%s\n", $currentState->getBoard());
-
             if ($currentState->isSolved()) {
-                echo("board is solved!\n");
                 echo($currentState);
                 return $currentState;
             }
 
             $nextMoveDirections = $currentState->getValidMoveDirections();
+
+//            shuffle($nextMoveDirections);
 
             $lastDirection = $currentState->getLastDirection();
 

@@ -35,6 +35,11 @@ class SolverState {
         return GameBoard::fromBoard($this->board);
     }
 
+    public function getInternalBoard()
+    {
+        return $this->board;
+    }
+
     public function isSolved()
     {
         return $this->board->isSolved();

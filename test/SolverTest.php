@@ -14,10 +14,9 @@ class SolverTest extends \PHPUnit_Framework_TestCase
 {
     public function testNoMovesForSolvedGame()
     {
-        $board = new GameBoard();
-        $solver = new Solver($board);
+        $solution = Solver::getMovesFrom(new GameBoard());
 
-        $this->assertEquals(0, sizeOf($solver->getMoves()));
+        $this->assertEquals(0, sizeOf($solution));
     }
 
     /**
@@ -39,9 +38,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         $board->swapDown();
         $board->swapRight();
 
-        $solver = new Solver($board);
-
-        $solution = $solver->getMoves();
+        $solution = Solver::getMovesFrom($board);
 
         printf("solution:\n");
         printf("%s\n", $solution);
@@ -70,9 +67,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         $board->swapDown();
         $board->swapRight();
 
-        $solver = new Solver($board);
-
-        $solution = $solver->getMoves();
+        $solution = Solver::getMovesFrom($board);
 
         printf("solution:\n");
         printf("%s\n", $solution);
@@ -111,9 +106,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
 //        $board->swapRight();
 //        $board->swapDown();
 
-        $solver = new Solver($board);
-
-        $solution = $solver->getMoves();
+        $solution = Solver::getMovesFrom($board);
 
         printf("solution:\n");
         printf("%s\n", $solution);

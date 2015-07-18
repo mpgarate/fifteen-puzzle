@@ -64,6 +64,8 @@ class GameBoard
 
         $val = ($row * 4) + $col;
         $this->freeSpace = $val;
+
+        $this->bitBoard->set($row, $col, 0);
     }
 
     private function getRow($index)
@@ -227,13 +229,13 @@ class GameBoard
         $score = 0;
 
         for ($i = 0; $i < 16; $i++) {
+            if ($this->freeSpace === $i) {
+                continue;
+            }
 
             $actual_row = $this->getRow($i);
             $actual_col = $this->getCol($i);
 
-            if ($this->freeSpace === $i){
-                continue;
-            }
 
             $val = $this->bitBoard->get($actual_row, $actual_col);
 
