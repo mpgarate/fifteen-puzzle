@@ -11,10 +11,10 @@ namespace FifteenPuzzle\model;
 
 abstract class MoveDirection
 {
-    const LEFT = 1;
-    const RIGHT = 2;
-    const UP = 3;
-    const DOWN = 4;
+    const LEFT = -1;
+    const RIGHT = 1;
+    const UP = 2;
+    const DOWN = -2;
 
     public static function asString($moveDirection)
     {

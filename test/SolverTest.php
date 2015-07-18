@@ -47,4 +47,75 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         printf("%s\n", $solution);
         $this->assertTrue(sizeOf($solution->getSteps()) > 0);
     }
+
+    public function testSolvesMedBoard()
+    {
+        $board = new GameBoard();
+        $board->swapLeft();
+        $board->swapUp();
+        $board->swapUp();
+        $board->swapLeft();
+        $board->swapDown();
+        $board->swapRight();
+        $board->swapRight();
+        $board->swapUp();
+        $board->swapLeft();
+        $board->swapUp();
+        $board->swapLeft();
+        $board->swapDown();
+        $board->swapRight();
+        $board->swapUp();
+        $board->swapLeft();
+        $board->swapLeft();
+        $board->swapDown();
+        $board->swapRight();
+
+        $solver = new Solver($board);
+
+        $solution = $solver->getMoves();
+
+        printf("solution:\n");
+        printf("%s\n", $solution);
+        $this->assertTrue(sizeOf($solution->getSteps()) > 0);
+    }
+
+    /**
+     * @throws Model\InvalidSwapException
+     *
+     * 1  2  3  4
+     * 6  10  7  8
+     * 5  13 11 14
+     * 9  -- 15 12
+     *
+     */
+    public function testSolvesHarderBoard()
+    {
+        $board = new GameBoard();
+        $board->swapLeft();
+        $board->swapLeft();
+        $board->swapLeft();
+        $board->swapUp();
+        $board->swapUp();
+        $board->swapRight();
+        $board->swapDown();
+        $board->swapRight();
+        $board->swapUp();
+        $board->swapLeft();
+//        $board->swapLeft();
+//        $board->swapDown();
+//        $board->swapRight();
+//        $board->swapUp();
+//        $board->swapUp();
+//        $board->swapLeft();
+//        $board->swapDown();
+//        $board->swapRight();
+//        $board->swapDown();
+
+        $solver = new Solver($board);
+
+        $solution = $solver->getMoves();
+
+        printf("solution:\n");
+        printf("%s\n", $solution);
+    }
 }

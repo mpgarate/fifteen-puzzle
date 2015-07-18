@@ -40,7 +40,8 @@ class BitBoard {
      */
 
 
-    const SOLUTION = 0x0123456789ABCDEF;
+    // 0x0123456789ABCDEF
+    const SOLUTION = 81985529216486895;
     private $bits;
     private $fifteen = 0;
 
@@ -93,6 +94,6 @@ class BitBoard {
 
     public function isSolved()
     {
-        return $this>bits == self::SOLUTION && 0 == $this->fifteen;
+        return (($this->bits === self::SOLUTION) && (0 === $this->fifteen));
     }
 }

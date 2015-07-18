@@ -45,6 +45,11 @@ class SolverState {
         return $this->board->getScore();
     }
 
+    public function getLastDirection()
+    {
+        return $this->steps[sizeof($this->steps) - 1];
+    }
+
     public function getValidMoveDirections()
     {
         return $this->board->getValidMoveDirections();

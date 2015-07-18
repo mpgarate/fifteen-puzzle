@@ -18,13 +18,13 @@ class GameBoard
     public function __construct($bitBoard = null, $freeSpace = null)
     {
 
-        if (null == $bitBoard || null == $freeSpace) {
+        if (null === $bitBoard || null === $freeSpace) {
             $this->bitBoard = new BitBoard();
             $this->freeSpace = 15;
         } else {
             $this->bitBoard = new BitBoard($bitBoard);
 
-            if ($freeSpace > 0 && $freeSpace < 16) {
+            if ($freeSpace >= 0 && $freeSpace < 16) {
                 $this->freeSpace = $freeSpace;
             } else {
                 throw new \InvalidArgumentException();
@@ -106,7 +106,7 @@ class GameBoard
         if ($freeCol != 3) {
             $this->doSwap($freeRow, $freeCol + 1);
         } else {
-            throw new InvalidSwapException();
+            throw new InvalidSwapException("Cannot swap right from col: " . $freeCol);
         }
     }
 
